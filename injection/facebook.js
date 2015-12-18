@@ -18,7 +18,11 @@ function normName(x) {
     return x.toLowerCase();
 }
 
-function findName(name, cb) {
+function stripNickname(name) {
+    return name.replace(/ \(.*\)/, '')
+}
+
+function findByName(name, cb) {
     //function getBetterMatch(name, items) {
     //}
 
@@ -41,7 +45,6 @@ function findName(name, cb) {
         // TODO: sort by match score.
         items.forEach(function (user) {
             if (getMatchScore(user) > 0) {
-                console.log("matched!", user);
                 matches.push(user);
             }
         });
@@ -50,22 +53,14 @@ function findName(name, cb) {
 
     function findByLName(cb) {
         var key = normName(lname);
-        console.log("key", key)
         chrome.storage.local.get(key, function(result) {
             if (Object.keys(result).length == 0) {
                 return cb(false);
             }
-            console.log("result", result);
             cb(getMatches(result[key]));
         });
     }
 
-    // Some throughout search.
-    //function findElse(cb) {
-        //return cb(false);
-    //}
-
-    console.log("Find me "+name);
     findByLName(function(found) {
         if (found) {
             cb(found);
@@ -73,13 +68,6 @@ function findName(name, cb) {
         }
         return cb(false);
     });
-}
-
-function getStudentsByName(name, cb) {
-    findName(name, function(data) {
-        console.log("sendng response", data)
-        cb({ students: data });
-    })
 }
         
 function handleProfile() {
@@ -162,59 +150,66 @@ function handleProfile() {
     if (!document.querySelector("#fb-timeline-cover-name")) {
         throw new Error("Failed to get profile name.");
     }
-    var name = document.querySelector("#fb-timeline-cover-name")
-                .textContent.replace(/ \(.*\)/, '');
-    console.log(name);
-    getStudentsByName(name, function (response) {
-    // chrome.runtime.sendMessage({ getMe: userName }, function (response) {
-        console.log("response", response);
-        if (response && response.students.length) {
-            addUserData(response.students[0]);
+    var name = stripNickname(
+            document.querySelector("#fb-timeline-cover-name").textContent);
+
+    console.log("Looking for name:", name);
+
+    findByName(name, function(students) {
+        if (students.length) {
+            addUserData(students[0]);
+        } else {
+            console.log("Student not found.");
         }
     });
     
 }
 
+var olds = {
+    url: null,
+    name: null,
+};
+
 function main() {
-    function isProfilePage() {
-        var cntr = document.querySelector(".timelineReportContainer");
-        if (cntr) {
-            return true;
-        }
-        return false;
+    // Check if page has sidebar box, and if the name of the user in the
+    // profile can be found.
+    if (!document.querySelector(".timelineReportContainer") ||
+        !document.querySelector("#fb-timeline-cover-name")) {
+        console.log("Not proper profile page.");
+        return;
     }
 
-    console.log("PORRARARA")
-    if (isProfilePage()) {
-        console.log("IS PROFILE");
+    var news = {
+        url: location.pathname,
+        name: document.querySelector("#fb-timeline-cover-name").textContent,
+    };
+
+    console.log("Is profile page with sidebar.");
+    if (news.name != olds.name && news.url != olds.url) {
+        olds = news;
+        console.log("Is untouched profile page.");
         handleProfile();
     }
+    olds = news;
 }
 
-var oldUrl = location.pathname;
-var oldName_ = document.querySelector("#fb-timeline-cover-name");
-if (oldName_) {
-    var oldName = oldName_.textContent;
-}
+// Execute main on start, on state change, and when our background page
+// tells us that a push-state event has occured in our tab.
+
+$(main);
+
+$(window).on("statechange", function(){
+    console.log("STATE CHANGE.")
+    setTimeout(main, 1000);
+});
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.urlChange) {
-        var newUrl = location.pathname;
-        var newName_ = document.querySelector("#fb-timeline-cover-name");
-        if (newName_) {
-            var newName = newName_.textContent;
-        }
-
-        if (location.pathname != oldUrl || newName != oldName) {
-            oldName = newName;
-            oldUrl = newUrl;
-
-            main();
-        }
+        console.log("PUSH CHANGE.");
+        setTimeout(main, 1000);
     } else {
         throw new Error("Unrecognized message from background page.");
     }
 });
 
 
-$(main);
