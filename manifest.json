@@ -4,12 +4,30 @@
     "name": "Bulldog Facebook",
     "description": "Adds information about Yale students on your facebook.",
     "version": "0.0",
+    
+    "background": {
+        "persistent": false,
+        "scripts": ["background.js"]
+    },
 
     "content_scripts": [
         {
-            "matches": ["http://www.facebook.com/*"],
+            "matches": [
+                "http://www.facebook.com/*",
+                "https://www.facebook.com/*"
+            ],
             "css": ["injection/main.css"],
-            "js": ["injection/jquery-2.1.4.min.js", "injection/main.js"]
+            "js": ["injection/jquery-2.1.4.min.js", "injection/facebook.js"]
+        },
+        {
+            "matches": [
+                "https://students.yale.edu/facebook/*"
+            ],
+            "js": ["injection/jquery-2.1.4.min.js", "injection/yalefb.js"]
         }
+    ],
+
+    "permissions": [
+        "storage"
     ]
 }
