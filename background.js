@@ -1,5 +1,27 @@
 // background.js -- Non-persistent background page for extension.
 
+// Adapted from https://mathiasbynens.be/notes/localstorage-pattern
+function getLocalStorage() {
+    var storage;
+    var fail;
+    var uid;
+    try {
+        uid = new Date;
+        (storage = window.localStorage).setItem(uid, uid);
+        fail = storage.getItem(uid) != uid;
+        storage.removeItem(uid);
+        fail && (storage = false);
+        return storage;
+    } catch (exception) {
+        return false;
+    }
+}
+
+var storage = getLocalStorage();
+if (!storage) {
+    throw new Error("Extension failed to access localStorage.");
+}
+
 function openLoader(opts, cb) {
     var props = {
         url: 'loader/index.html',
@@ -32,6 +54,15 @@ function onGetMessage(request, sender, respond) {
     if (request.openLoader) {
         openLoader({}, function() {
         });
+    } else if (request.updateHasSetup) {
+        storage.setItem("isSetup", true);
+        respond();
+    } else if (request.deleteData) {
+        storage.removeItem("isSetup");
+        chrome.storage.local.clear(respond);
+    } else if (request.getStatus) {
+        var is = storage.getItem("isSetup");
+        respond({ isSetup: is });
     } else if (request.downloadYFb) {
         loaderOpenYFb({}, function () {
         });

@@ -17,6 +17,28 @@
 
 .warning {
     padding: 7px;
-    background: #FFFFE0;
+    background: #FFFF99;
+}
+
+button {
+    padding: 3px 9px 3px;
+}
+
+button.doit {
+    color: #0bf;
+}
+
+.status-wrapper {
+    padding: 7px;
+    background: #EEE;
+
+    -webkit-margin-before: 1em;
+    -webkit-margin-after: 1em;
+    -webkit-margin-start: 0px;
+    -webkit-margin-end: 0px;
+}
+
+.status-wrapper p {
+    margin: 0;
 }
 

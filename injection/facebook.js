@@ -305,23 +305,27 @@ function handleProfile() {
         return false;
     }
 
-    if (!lstore.getItem("isSetup")) {
-        showSetupBDBook();
-        return;
-    }
-
-    if (!isFromYale()) {
-        console.log("Not a Yale student.");
-        showTryFind();
-        return;
-    }
-
-    findByName(name, function(students) {
-        if (students.length) {
-            addUserData(students[0]);
-        } else {
-            console.log("Student not found.");
+    // Request status from background: has data been downloaded, ...?
+    chrome.runtime.sendMessage({ getStatus: true }, function (status) {
+        console.log("Got status:", status);
+        if (!status.isSetup) {
+            showSetupBDBook();
+            return;
         }
+
+        if (!isFromYale()) {
+            console.log("Not a Yale student.");
+            showTryFind();
+            return;
+        }
+
+        findByName(name, function(students) {
+            if (students.length) {
+                addUserData(students[0]);
+            } else {
+                console.log("Student not found.");
+            }
+        });
     });
 }
 

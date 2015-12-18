@@ -336,7 +336,10 @@ function main() {
     var students = parsePage();
     storeStudents(students);
 
-    infoBox.showSuccess();
+    chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+        infoBox.showSuccess();
+    });
+
 }
 
 main();

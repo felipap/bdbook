@@ -27,6 +27,13 @@
     font-size: 1.1em;
 }
 
-.bdb_blackout {
+.bdb .status.success strong {
+    color: #2ECC40;
+}
 
+.bdb_blackout {
+    position: fixed;
+    top: 0; bottom: 0;
+    width: 100%;
+    background: rgba(0,0,0,.4);
 }
