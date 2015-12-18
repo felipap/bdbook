@@ -130,7 +130,6 @@ function handleProfile() {
 
         for (var i=0; i<sbItems.length; ++i) {
             var text = $(sbItems[i]).text();
-            console.log("text", text)
             if (text.match(/Studie[sd](?: [\w ]+)? at Yale University/)) {
                 return true;
             }
@@ -173,24 +172,29 @@ var olds = {
 function main() {
     // Check if page has sidebar box, and if the name of the user in the
     // profile can be found.
+    var news = {
+        url: location.pathname,
+        name: "",
+    };
+
     if (!document.querySelector(".timelineReportContainer") ||
         !document.querySelector("#fb-timeline-cover-name")) {
         console.log("Not proper profile page.");
+        olds = news;
         return;
     }
 
-    var news = {
-        url: location.pathname,
-        name: document.querySelector("#fb-timeline-cover-name").textContent,
-    };
+    news.name = document.querySelector("#fb-timeline-cover-name").textContent;
 
     console.log("Is profile page with sidebar.");
-    if (news.name != olds.name && news.url != olds.url) {
+    if (news.name != olds.name || news.url != olds.url) {
         olds = news;
         console.log("Is untouched profile page.");
         handleProfile();
+    } else {
+        console.log("old:", JSON.stringify(olds), "= new:", JSON.stringify(news));
+        olds = news;
     }
-    olds = news;
 }
 
 // Execute main on start, on state change, and when our background page
@@ -200,13 +204,13 @@ $(main);
 
 $(window).on("statechange", function(){
     console.log("STATE CHANGE.")
-    setTimeout(main, 1000);
+    setTimeout(main, 1500);
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.urlChange) {
         console.log("PUSH CHANGE.");
-        setTimeout(main, 1000);
+        setTimeout(main, 1500);
     } else {
         throw new Error("Unrecognized message from background page.");
     }
