@@ -242,25 +242,104 @@ function storeStudents(stds) {
     });
 }
 
-function showInfoBox() {
+function InfoBox() {
     var html = [
         "<div class='bdb_blackout'></div>",
         "<div class='bdb bdb_box_wrapper'>",
         "<h1>Bulldog Book Loader</h1>",
         "<p>Let's download the students data to use.</p>",
-        "<div class='asdf'>",
+        "<div class='status'>",
         "</div>",
         "</div>",
     ].join("");
-    $("body").append(html);
+
+    var $el = $(html);
+
+    this.show = function () {
+        $("body").append($el);
+        return $el;
+    }
+
+    this.showParsing = function () {
+        $el.find(".status").html("<strong>PARSING data! Don't close tab.</strong>"+
+                " <p>This should take less than a minute!</p>");
+        return $el;
+    }
+
+    this.showLoading = function () {
+        $el.find(".status").html("<strong>Loading! Don't close tab.</strong>"+
+                " <p>This should take less than a minute!</p>");
+        return $el;
+    }
+
+    this.showSuccess = function () {
+        $el.find(".status")
+            .addClass("success")
+            .html("<strong>Success!</strong> You can close this tab now.");
+        return $el;
+    }
 }
 
-            $(function () {
-                showInfoBox();
-                console.log("Starting to parse page.");
-                var students = parsePage();
-                storeStudents(students);
-            });
+function getParameterByName(name) {
+    console.log("GetParam", name);
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+function isListDisplay() {
+    return getParameterByName("textDisplay") == "true" &&
+        getParameterByName("numberToGet") == "-1" &&
+        getParameterByName("currentIndex") == "-1";
+}
+
+function getCurrentCollege() {
+    var st = document.querySelector("#searchTerm");
+    if (!st) {
+        throw new Error("Failed to detect current college.");
+    }
+
+    return st.getAttribute("placeholder").match(/(.*) $/)[1];
+}
+
+function main() {
+    console.log("MAIN");
+    
+    infoBox = new InfoBox();
+    infoBox.show();
+    
+    // Goto Yale list view.
+    if (getCurrentCollege() != "Yale") {
+        infoBox.showLoading();
+        $.get("/facebook/ChangeCollege?newOrg=Yale%20College");
+        setTimeout(function() {
+        var url = "/facebook/PhotoPage?currentIndex=-1&textDisplay=true&numberToGet=-1";
+        window.location.href = url;
+        }, 2000);
+        return;
+    }
+    console.log("IS YALE");
+
+    // Show list display.
+    if (!isListDisplay()) {
+        infoBox.showLoading();
+        var url = "/facebook/PhotoPage?currentIndex=-1&textDisplay=true&numberToGet=-1";
+        window.location.href = url;
+        return;
+    }
+
+    infoBox.showParsing();
+
+    // gotoListDisplay();
+    console.log("Starting to parse page.");
+    var students = parsePage();
+    storeStudents(students);
+
+    infoBox.showSuccess();
+}
+
+main();
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, respond) {

@@ -18,6 +18,15 @@
   font-weight: bold;
 }
 
+.bdb strong {
+    font-weight: bold;
+}
+
+.bdb .status {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
 .bdb_blackout {
 
 }
