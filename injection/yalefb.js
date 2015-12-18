@@ -85,7 +85,8 @@ function parsePage() {
             data.major = lines[lines.length-1];
         }
 
-        data.address = lines.slice(addrStart, addrEnd).join(" ")
+        // Don't store people's addresses, dude.
+        // data.address = lines.slice(addrStart, addrEnd).join(" ")
 
         return data;
     }

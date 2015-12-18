@@ -1,2 +1,19 @@
 
 
+.bdfb_profile_li {
+    padding: 4px 16px 4px 0;
+}
+
+.bdfb_profile_li > .bdfb_y {
+    display: inline-block;
+    width: 18px;
+    padding-left: 2px;
+    color: #0E4C92; /* Yale Blue */
+    font-weight: bold;
+    font-family: initial;
+}
+
+.dbfb_profile_li > .bdfb_college {
+    font-weight: bold;
+}
+
