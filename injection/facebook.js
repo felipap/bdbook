@@ -112,9 +112,6 @@ var normName = (function() {
     }
 })();
 
-
-alert(normName("Felipe Aragão Pires"))
-
 function isProfilePage() {
     var cntr = document.querySelector(".timelineReportContainer");
     if (cntr) {
@@ -136,8 +133,6 @@ function findByName(name, cb) {
         if (normName(user.names[user.names.length-1]) != normName(lname)) {
             return 0;
         }
-        console.log("matching "+names+" against ", user);
-        console.log(normName(user.names[0]), normName(fname))
         if (normName(user.names[0]) == normName(fname)) {
             return 1;
         }
@@ -165,8 +160,6 @@ function findByName(name, cb) {
         });
     }
 
-    console.log("Trying lname:", normName(lname));
-
     findByLName(function(found) {
         if (found) {
             cb(found);
@@ -178,6 +171,38 @@ function findByName(name, cb) {
         
 function handleProfile() {
     var tmlcntr = document.querySelector(".timelineReportContainer");
+
+    if (!document.querySelector("#fb-timeline-cover-name")) {
+        throw new Error("Failed to get profile name.");
+    }
+    var name = stripNickname(
+            document.querySelector("#fb-timeline-cover-name").textContent);
+    console.log("Looking for name:", name);
+
+
+    function addTryFind() {
+        var ul = tmlcntr.querySelector(".uiList");
+        if (!ul) {
+            throw new Error("Failed to find ui component to append to.")
+        }
+
+        var li = document.createElement("li");
+        li.className = "bdfb_profile_li bdfb_profile_li_tryfind";
+        li.innerHTML = "<div class='bdfb_y'>Y</div>";
+        li.innerHTML += "<span>Try to find "+name+" in Yale Facebook.</span>";
+        li.setAttribute("title", "BD Book extension for Chrome.");
+        // ul.appendChild(li);
+        li.onclick = function() {
+            findByName(name, function(students) {
+                if (students.length) {
+                    addUserData(students[0]);
+                } else {
+                    console.log("Student not found.");
+                }
+            });
+        }
+        $(ul).prepend(li);
+    }
 
     function addUserData(data) {
         var ul = tmlcntr.querySelector(".uiList");
@@ -249,16 +274,9 @@ function handleProfile() {
 
     if (!isFromYale()) {
         console.log("Not a Yale student.");
+        addTryFind();
         return;
     }
-
-    if (!document.querySelector("#fb-timeline-cover-name")) {
-        throw new Error("Failed to get profile name.");
-    }
-    var name = stripNickname(
-            document.querySelector("#fb-timeline-cover-name").textContent);
-
-    console.log("Looking for name:", name);
 
     findByName(name, function(students) {
         if (students.length) {

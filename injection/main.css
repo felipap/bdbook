@@ -13,7 +13,12 @@
     font-family: initial;
 }
 
-.dbfb_profile_li > .bdfb_college {
-    font-weight: bold;
+
+.bdfb_profile_li_tryfind {
+    cursor: pointer;
+    color: #0E4C92; /* Yale Blue */
 }
 
+.bdfb_profile_li_tryfind:hover {
+    text-decoration: underline;
+}
