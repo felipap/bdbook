@@ -16,6 +16,7 @@
                 "http://www.facebook.com/*",
                 "https://www.facebook.com/*"
             ],
+            "run_at": "document_start",
             "css": ["injection/main.css"],
             "js": ["injection/jquery-2.1.4.min.js", "injection/facebook.js"]
         },
@@ -23,6 +24,7 @@
             "matches": [
                 "https://students.yale.edu/facebook/*"
             ],
+            "css": ["injection/yalefb.css"],
             "js": ["injection/jquery-2.1.4.min.js", "injection/yalefb.js"]
         }
     ],

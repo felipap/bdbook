@@ -242,8 +242,32 @@ function storeStudents(stds) {
     });
 }
 
-$(function () {
-    console.log("Starting to parse page.");
-    var students = parsePage();
-    storeStudents(students);
-});
+function showInfoBox() {
+    var html = [
+        "<div class='bdb_blackout'></div>",
+        "<div class='bdb bdb_box_wrapper'>",
+        "<h1>Bulldog Book Loader</h1>",
+        "<p>Let's download the students data to use.</p>",
+        "<div class='asdf'>",
+        "</div>",
+        "</div>",
+    ].join("");
+    $("body").append(html);
+}
+
+            $(function () {
+                showInfoBox();
+                console.log("Starting to parse page.");
+                var students = parsePage();
+                storeStudents(students);
+            });
+
+chrome.runtime.onMessage.addListener(
+    function (request, sender, respond) {
+        console.log("QUE?");
+        if (request.parseAndDownload) {
+            alert("Parsing page.");
+        } else {
+            throw new Error("Proceed().");
+        }
+    });

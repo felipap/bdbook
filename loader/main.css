@@ -1,0 +1,22 @@
+
+.container {
+    width: 960px;
+    position: relative;
+    left: 50%;
+    margin-left: -480px;
+}
+
+.cas-wrapper {
+    
+}
+
+.cas-wrapper > iframe {
+    width: 700px;
+    height: 400px;
+}
+
+.warning {
+    padding: 7px;
+    background: #FFFFE0;
+}
+

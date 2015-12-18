@@ -5,6 +5,29 @@ if (!window.jQuery) {
     throw new Error("jQuery required for extension not found.");
 }
 
+// Adapted from https://mathiasbynens.be/notes/localstorage-pattern
+function getLocalStorage() {
+    var storage;
+    var fail;
+    var uid;
+    try {
+        uid = new Date;
+        (storage = window.localStorage).setItem(uid, uid);
+        fail = storage.getItem(uid) != uid;
+        storage.removeItem(uid);
+        fail && (storage = false);
+        return storage;
+    } catch (exception) {
+        return false;
+    }
+}
+
+// Needs localStorage in order to work.
+var lstore = getLocalStorage();
+if (!lstore) {
+    throw new Error("Couldn't open/use localStorage.");
+}
+
 var normName = (function() {
     // Adapted from http://stackoverflow.com/a/18391901/396050
     var defaultDiacriticsRemovalap = [
@@ -112,14 +135,6 @@ var normName = (function() {
     }
 })();
 
-function isProfilePage() {
-    var cntr = document.querySelector(".timelineReportContainer");
-    if (cntr) {
-        return true;
-    }
-    return false;
-}
-
 function stripNickname(name) {
     return name.replace(/ \(.*\)/, '')
 }
@@ -179,8 +194,26 @@ function handleProfile() {
             document.querySelector("#fb-timeline-cover-name").textContent);
     console.log("Looking for name:", name);
 
+    function showSetupBDBook() {
+        var ul = tmlcntr.querySelector(".uiList");
+        if (!ul) {
+            throw new Error("Failed to find ui component to append to.")
+        }
 
-    function addTryFind() {
+        var li = document.createElement("li");
+        li.className = "bdfb_profile_li bdfb_profile_li_tryfind";
+        li.innerHTML = "<div class='bdfb_y'>Y</div>";
+        li.innerHTML += "<span>Click here to start seeing yalies' info.</span>";
+        li.setAttribute("title", "BD Book extension for Chrome.");
+        // ul.appendChild(li);
+        li.onclick = function() {
+            chrome.runtime.sendMessage({ openLoader: true }, function (response) {
+            });
+        }
+        $(ul).prepend(li);
+    }
+
+    function showTryFind() {
         var ul = tmlcntr.querySelector(".uiList");
         if (!ul) {
             throw new Error("Failed to find ui component to append to.")
@@ -272,9 +305,14 @@ function handleProfile() {
         return false;
     }
 
+    if (!lstore.getItem("isSetup")) {
+        showSetupBDBook();
+        return;
+    }
+
     if (!isFromYale()) {
         console.log("Not a Yale student.");
-        addTryFind();
+        showTryFind();
         return;
     }
 
@@ -285,7 +323,15 @@ function handleProfile() {
             console.log("Student not found.");
         }
     });
-    
+}
+
+
+function isProfilePage() {
+    var cntr = document.querySelector(".timelineReportContainer");
+    if (cntr) {
+        return true;
+    }
+    return false;
 }
 
 var olds = {
@@ -323,7 +369,6 @@ function main() {
 
 // Execute main on start, on state change, and when our background page
 // tells us that a push-state event has occured in our tab.
-
 $(main);
 
 $(window).on("statechange", function(){
