@@ -159,11 +159,12 @@ function handleProfile() {
         return;
     }
 
-    var name = document.querySelector("#fb-timeline-cover-name");
-    if (!name) {
+    if (!document.querySelector("#fb-timeline-cover-name")) {
         throw new Error("Failed to get profile name.");
     }
-    name = name.textContent;
+    var name = document.querySelector("#fb-timeline-cover-name")
+                .textContent.replace(/ \(.*\)/, '');
+    console.log(name);
     getStudentsByName(name, function (response) {
     // chrome.runtime.sendMessage({ getMe: userName }, function (response) {
         console.log("response", response);
@@ -175,8 +176,17 @@ function handleProfile() {
 }
 
 function main() {
+    function isProfilePage() {
+        var cntr = document.querySelector(".timelineReportContainer");
+        if (cntr) {
+            return true;
+        }
+        return false;
+    }
+
     console.log("PORRARARA")
     if (isProfilePage()) {
+        console.log("IS PROFILE");
         handleProfile();
     }
 }
