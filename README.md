@@ -1,6 +1,12 @@
 
 # Bulldog Book
 
+Access on [Chrome Webstore](https://chrome.google.com/webstore/detail/bulldog-facebook/jnfmcjindkjnjmapjemigfinkhgieoik).
+
+What it looks like:
+
+![](http://i.imgur.com/6FxDRNS.png)
+
 **Bookdog Book** is a Chrome extension that adds to Facebook profiles of
 current Yale undergrads information about their residential colleges, class
 year and dorm numbers. It's the same data that all Yale undergraduates have
