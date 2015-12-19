@@ -194,12 +194,33 @@ function handleProfile() {
             document.querySelector("#fb-timeline-cover-name").textContent);
     console.log("Looking for name:", name);
 
-    function showSetupBDBook() {
-        var ul = tmlcntr.querySelector(".uiList");
-        if (!ul) {
-            throw new Error("Failed to find ui component to append to.")
-        }
+    var ul = tmlcntr.querySelector(".uiList");
+    if (!ul) {
+        throw new Error("Failed to find ui component to append to.")
+    }
 
+    function removePreviousLines() {
+        var current = ul.querySelectorAll(".bdfb_profile_li");
+        for (var i=0; i<current.length; ++i) {
+            ul.removeChild(current[i]);
+        }
+    }
+
+    function makeYaleLine(inner, className) {
+        var li = document.createElement("li");
+        li.className = "bdfb_profile_li "+(className || "");
+        li.innerHTML = "<div class='bdfb_y'>Y</div>"+inner;
+        li.setAttribute("title", "BD Book extension for Chrome.");
+        return li;
+    }
+    
+    function showNotFound() {
+        var li = makeYaleLine("Student not found in Yale Directory.");
+        removePreviousLines();
+        $(ul).prepend(li);
+    }
+
+    function showSetupBDBook() {
         var li = document.createElement("li");
         li.className = "bdfb_profile_li bdfb_profile_li_tryfind";
         li.innerHTML = "<div class='bdfb_y'>Y</div>";
@@ -214,11 +235,6 @@ function handleProfile() {
     }
 
     function showTryFind() {
-        var ul = tmlcntr.querySelector(".uiList");
-        if (!ul) {
-            throw new Error("Failed to find ui component to append to.")
-        }
-
         var li = document.createElement("li");
         li.className = "bdfb_profile_li bdfb_profile_li_tryfind";
         li.innerHTML = "<div class='bdfb_y'>Y</div>";
@@ -238,11 +254,6 @@ function handleProfile() {
     }
 
     function addUserData(data) {
-        var ul = tmlcntr.querySelector(".uiList");
-        if (!ul) {
-            throw new Error("Failed to find ui component to append to.")
-        }
-
         function formatLines(data) {
             // The information we get is: names, image, year, college,
             // email, dorm, and suite group.
@@ -252,7 +263,7 @@ function handleProfile() {
             // }
             
             if (data.college) {
-                var html = "<div class='bdfb_y'>Y</div> ";
+                var html = "<div class='bdfb_y'>Y</div>"; // NO SPACE AFTER
                 html += "<span class='bdfb_college'>"+data.college+"</span> ";
                 if (data.year) {
                     html += "<span class='bdfb_year'>"+data.year+"</span> ";
@@ -323,6 +334,7 @@ function handleProfile() {
             if (students.length) {
                 addUserData(students[0]);
             } else {
+                showNotFound();
                 console.log("Student not found.");
             }
         });
