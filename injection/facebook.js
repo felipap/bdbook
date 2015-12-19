@@ -135,9 +135,6 @@ var normName = (function() {
     }
 })();
 
-function stripNickname(name) {
-    return name.replace(/ \(.*\)/, '')
-}
 
 function findByName(name, cb) {
     var names = name.split(" "),
@@ -184,17 +181,31 @@ function findByName(name, cb) {
     });
 }
         
-function handleProfile() {
-    var tmlcntr = document.querySelector(".timelineReportContainer");
-
-    if (!document.querySelector("#fb-timeline-cover-name")) {
-        throw new Error("Failed to get profile name.");
+function getUIContainer() {
+    var cntrs = document.querySelectorAll(".fbTimelineUnit");
+    for (var i=0; i<cntrs.length; ++i) {
+        var cntr = cntrs[i].querySelector("div > div"); // .timelineReportContainer");
+        try {
+            var dataset = JSON.parse(cntr.dataset.gt);
+        } catch (e) {
+            continue;
+        }
+        var type = dataset.timeline_unit_type;
+        if (type == "ContextItemsUnit" || type == "IntroCardUnit") {
+            return cntr;
+        }
     }
-    var name = stripNickname(
-            document.querySelector("#fb-timeline-cover-name").textContent);
-    console.log("Looking for name:", name);
 
-    var ul = tmlcntr.querySelector(".uiList");
+    return null;
+}
+
+function handleProfile(name, container) {
+    console.log("Looking for name:", name);
+    if (!name || !container) {
+        throw new Error("Invalid name or container arguments.");
+    }
+
+    var ul = container.querySelector(".uiList");
     if (!ul) {
         throw new Error("Failed to find ui component to append to.")
     }
@@ -215,18 +226,15 @@ function handleProfile() {
     }
     
     function showNotFound() {
-        var li = makeYaleLine("Student not found in Yale Directory.");
+        var li = makeYaleLine("Person not found in Yale Directory.");
         removePreviousLines();
+        console.log("li", li);
         $(ul).prepend(li);
     }
 
     function showSetupBDBook() {
-        var li = document.createElement("li");
-        li.className = "bdfb_profile_li bdfb_profile_li_tryfind";
-        li.innerHTML = "<div class='bdfb_y'>Y</div>";
-        li.innerHTML += "<span>Click here to start seeing yalies' info.</span>";
-        li.setAttribute("title", "BD Book extension for Chrome.");
-        // ul.appendChild(li);
+        var li = makeYaleLine("Click here to start seeting yalies' info.</span>",
+                "bdfb_profile_li_tryfind");
         li.onclick = function() {
             chrome.runtime.sendMessage({ openLoader: true }, function (response) {
             });
@@ -234,22 +242,10 @@ function handleProfile() {
         $(ul).prepend(li);
     }
 
-    function showTryFind() {
-        var li = document.createElement("li");
-        li.className = "bdfb_profile_li bdfb_profile_li_tryfind";
-        li.innerHTML = "<div class='bdfb_y'>Y</div>";
-        li.innerHTML += "<span>Try to find "+name+" in Yale Facebook.</span>";
-        li.setAttribute("title", "BD Book extension for Chrome.");
-        // ul.appendChild(li);
-        li.onclick = function() {
-            findByName(name, function(students) {
-                if (students.length) {
-                    addUserData(students[0]);
-                } else {
-                    console.log("Student not found.");
-                }
-            });
-        }
+    function showTryFind(onclick) {
+        var li = makeYaleLine("<span>Try to find "+name+" in Yale Facebook.</span>",
+                "bdfb_profile_li_tryfind");
+        li.onclick = onclick;
         $(ul).prepend(li);
     }
 
@@ -300,7 +296,7 @@ function handleProfile() {
         // Is there a better way to do this?
         // Get sidebar items, and look for "Studies at Yale University" or
         // "Lives in New Haven, Connecticut".
-        var sbItems = tmlcntr.querySelectorAll("[data-profile-intro-card]");
+        var sbItems = container.querySelectorAll("[data-profile-intro-card]");
         console.log(sbItems)
 
         for (var i=0; i<sbItems.length; ++i) {
@@ -326,7 +322,16 @@ function handleProfile() {
 
         if (!isFromYale()) {
             console.log("Not a Yale student.");
-            showTryFind();
+            showTryFind(function() {
+                findByName(name, function(students) {
+                    if (students.length) {
+                        addUserData(students[0]);
+                    } else {
+                        console.log("Student not found.");
+                        showNotFound();
+                    }
+                });
+            });
             return;
         }
 
@@ -341,13 +346,24 @@ function handleProfile() {
     });
 }
 
-
 function isProfilePage() {
     var cntr = document.querySelector(".timelineReportContainer");
     if (cntr) {
         return true;
     }
     return false;
+}
+
+function getName() {
+    function stripNickname(name) {
+        return name.replace(/ \(.*\)/, '')
+    }
+    
+    var c = document.querySelector("#fb-timeline-cover-name");
+    if (!c) {
+        return false;
+    }
+    return stripNickname(c.textContent);
 }
 
 var olds = {
@@ -363,8 +379,10 @@ function main() {
         name: "",
     };
 
-    if (!document.querySelector(".timelineReportContainer") ||
-        !document.querySelector("#fb-timeline-cover-name")) {
+    var name = getName();
+    var container = getUIContainer();
+
+    if (!name || !container) {
         console.log("Not proper profile page.");
         olds = news;
         return;
@@ -375,13 +393,13 @@ function main() {
         return;
     }
 
-    news.name = document.querySelector("#fb-timeline-cover-name").textContent;
+    news.name = name;
 
     console.log("Is profile page with sidebar.");
     if (news.name != olds.name || news.url != olds.url) {
         olds = news;
         console.log("Is untouched profile page.");
-        handleProfile();
+        handleProfile(name, container);
     } else {
         console.log("old:", JSON.stringify(olds), "= new:", JSON.stringify(news));
         olds = news;

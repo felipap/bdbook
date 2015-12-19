@@ -1,6 +1,10 @@
 
 
 .bdfb_profile_li {
+    padding: 7px 12px;
+}
+
+.timelineReportContainer .bdfb_profile_li {
     padding: 4px 16px 4px 0;
 }
 
@@ -12,7 +16,6 @@
     font-weight: bold;
     font-family: initial;
 }
-
 
 .bdfb_profile_li_tryfind {
     cursor: pointer;
