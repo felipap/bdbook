@@ -297,7 +297,14 @@ function handleProfile(name, container) {
         // Get sidebar items, and look for "Studies at Yale University" or
         // "Lives in New Haven, Connecticut".
         var sbItems = container.querySelectorAll("[data-profile-intro-card]");
-        console.log(sbItems)
+
+        console.log("data:", lstore.getItem("ypaths"));
+        var ypaths = lstore.getItem("ypaths");
+        if (ypaths) {
+            if (JSON.parse(ypaths)[location.pathname]) {
+                return true;
+            }
+        }
 
         for (var i=0; i<sbItems.length; ++i) {
             var text = $(sbItems[i]).text();
@@ -325,10 +332,18 @@ function handleProfile(name, container) {
             showTryFind(function() {
                 findByName(name, function(students) {
                     if (students.length) {
+                        var yps = lstore.getItem("yps");
+                        if (yps) {
+                            yps = JSON.parse(yps);
+                        } else {
+                            yps = {};
+                        }
+                        yps[location.pathname] = students[0].names;
+                        lstore.setItem("ypaths", JSON.stringify(yps));
+                        showNotFound();
                         addUserData(students[0]);
                     } else {
                         console.log("Student not found.");
-                        showNotFound();
                     }
                 });
             });
