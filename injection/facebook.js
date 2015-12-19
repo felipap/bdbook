@@ -252,19 +252,16 @@ function handleProfile(name, container) {
     function addUserData(data) {
         removePreviousLines();
 
-        var html = "<div class='bdfb_y'>Y</div>"; // NO SPACE AFTER
-        html += "<span class='bdfb_college'>"+data.college+"</span> ";
+        var html = "<span class='bdfb_college'>"+data.college+"</span> ";
         if (data.year) {
             html += "<span class='bdfb_year'>"+data.year+"</span> ";
         }
         if (data.dorm) {
             html += "<span class='bdfb_dorm'>("+data.dorm+")</span> ";
         }
-        var title = "Information from Yale Facebook.";
 
         var li = makeYaleLine(html);
-        li.setAttribute("title", lines[i].title);
-        // ul.appendChild(li);
+        li.setAttribute("title", "Information from Yale Facebook.");
         $(ul).prepend(li);
     }
 
@@ -357,43 +354,34 @@ function getName() {
     return stripNickname(c.textContent);
 }
 
-var olds = {
-    url: null,
-    name: null,
-};
-
 function main() {
     // Check if page has sidebar box, and if the name of the user in the
     // profile can be found.
-    var news = {
-        url: location.pathname,
-        name: "",
-    };
 
     var name = getName();
     var container = getUIContainer();
 
+    console.log("GOT CONTAINER", container);
+
     if (!name || !container) {
+        console.log("MATCH?", location.pathname);
+        if (location.pathname.match(/^\/(\d+|[A-Za-z0-9\.]+)\/?$/)) {
+            console.log("YES!");
+            setTimeout(main, 1000);
+        }
         console.log("Not proper profile page.");
-        olds = news;
         return;
     }
 
     if (document.querySelector(".bdfb_profile_li")) {
-        olds = news;
         return;
     }
 
-    news.name = name;
-
     console.log("Is profile page with sidebar.");
-    if (news.name != olds.name || news.url != olds.url) {
-        olds = news;
+    if (true) {
         console.log("Is untouched profile page.");
         handleProfile(name, container);
-    } else {
-        console.log("old:", JSON.stringify(olds), "= new:", JSON.stringify(news));
-        olds = news;
+        return true;
     }
 }
 
