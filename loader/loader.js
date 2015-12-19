@@ -6,6 +6,7 @@ function downloadYFb() {
 
 function deleteData() {
     chrome.runtime.sendMessage({ deleteData: true }, function (response) {
+        location.reload();
     });
 }
 

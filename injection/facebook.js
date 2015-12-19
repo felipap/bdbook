@@ -358,6 +358,11 @@ function main() {
         return;
     }
 
+    if (document.querySelector(".bdfb_profile_li")) {
+        olds = news;
+        return;
+    }
+
     news.name = document.querySelector("#fb-timeline-cover-name").textContent;
 
     console.log("Is profile page with sidebar.");

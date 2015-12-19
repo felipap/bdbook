@@ -3,7 +3,7 @@
 
     "name": "Bulldog Facebook",
     "description": "Adds information about Yale students on your facebook.",
-    "version": "0.0",
+    "version": "0.1",
     
     "background": {
         "persistent": false,

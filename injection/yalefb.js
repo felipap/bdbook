@@ -336,20 +336,28 @@ function main() {
     var students = parsePage();
     storeStudents(students);
 
-    chrome.runtime.sendMessage({greeting: "hello"}, function(response) {
+    chrome.runtime.sendMessage({updateHasSetup: true}, function(response) {
         infoBox.showSuccess();
     });
 
 }
 
-main();
+chrome.runtime.sendMessage({ amIParseTab: true }, function (response) {
+    if (response) {
+        console.log("Yes, I'm parsing tab.");
+        main();
+    }
+});
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, respond) {
         console.log("QUE?");
+        respond(true); // "Yes, I caught this!"
         if (request.parseAndDownload) {
             alert("Parsing page.");
+            main();
         } else {
             throw new Error("Proceed().");
         }
+        
     });

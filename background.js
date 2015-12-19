@@ -37,14 +37,11 @@ function loaderOpenYFb(opts, cb) {
 
     chrome.tabs.create(props, function(tab) {
         console.log("Tab:", tab, tab.id);
-        setTimeout(function(){
-            chrome.tabs.sendMessage(tab.id, { parseAndDownload: true },
-                function (response) {
-                    console.log(response);
-                });
-        }, 3000);
+        parsingTabs.push(tab.id);
     });
 }
+
+var parsingTabs = [];
 
 function onGetMessage(request, sender, respond) {
     console.log(sender.tab ?
@@ -60,6 +57,9 @@ function onGetMessage(request, sender, respond) {
     } else if (request.deleteData) {
         storage.removeItem("isSetup");
         chrome.storage.local.clear(respond);
+    } else if (request.amIParseTab) {
+        console.log("AM I?", sender.tab.id, parsingTabs);
+        respond(parsingTabs.indexOf(sender.tab.id) != -1);
     } else if (request.getStatus) {
         var is = storage.getItem("isSetup");
         respond({ isSetup: is });
