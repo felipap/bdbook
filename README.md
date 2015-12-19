@@ -14,6 +14,8 @@ personal nature between individuals who are included in the facebook/directory".
 ### Q: It's not working on some profiles.
 
 Bulldog Book works by looking up the name on a profile page names of students.
+If a student's first and last name don't match up accross Yale Directory and
+Facebook, we probably won't be able to find the person.
 
 ### Q: It's not working on ANY profile.
 
