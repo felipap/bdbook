@@ -250,46 +250,22 @@ function handleProfile(name, container) {
     }
 
     function addUserData(data) {
-        function formatLines(data) {
-            // The information we get is: names, image, year, college,
-            // email, dorm, and suite group.
-            var lines = [];
-            // for (var key in data) {
-            //   lines.push({ text: ""+key+" > "+data[key] });
-            // }
-            
-            if (data.college) {
-                var html = "<div class='bdfb_y'>Y</div>"; // NO SPACE AFTER
-                html += "<span class='bdfb_college'>"+data.college+"</span> ";
-                if (data.year) {
-                    html += "<span class='bdfb_year'>"+data.year+"</span> ";
-                }
-                if (data.dorm) {
-                    html += "<span class='bdfb_dorm'>("+data.dorm+")</span> ";
-                }
-                var title = "Information from Yale Facebook.";
-                lines.push({ html: html, title: title });
-            }
+        removePreviousLines();
 
-            return lines;
+        var html = "<div class='bdfb_y'>Y</div>"; // NO SPACE AFTER
+        html += "<span class='bdfb_college'>"+data.college+"</span> ";
+        if (data.year) {
+            html += "<span class='bdfb_year'>"+data.year+"</span> ";
         }
-
-        var lines = formatLines(data);
-        console.log(lines);
-
-        var current = ul.querySelectorAll(".bdfb_profile_li");
-        for (var i=0; i<current.length; ++i) {
-            ul.removeChild(current[i]);
+        if (data.dorm) {
+            html += "<span class='bdfb_dorm'>("+data.dorm+")</span> ";
         }
+        var title = "Information from Yale Facebook.";
 
-        for (var i=lines.length-1; i>=0; --i) {
-            var li = document.createElement("li");
-            li.className = "bdfb_profile_li";
-            li.innerHTML = lines[i].html;
-            li.setAttribute("title", lines[i].title);
-            // ul.appendChild(li);
-            $(ul).prepend(li);
-        }
+        var li = makeYaleLine(html);
+        li.setAttribute("title", lines[i].title);
+        // ul.appendChild(li);
+        $(ul).prepend(li);
     }
 
     function isFromYale() {
@@ -340,9 +316,9 @@ function handleProfile(name, container) {
                         }
                         yps[location.pathname] = students[0].names;
                         lstore.setItem("ypaths", JSON.stringify(yps));
-                        showNotFound();
                         addUserData(students[0]);
                     } else {
+                        showNotFound();
                         console.log("Student not found.");
                     }
                 });

@@ -34,6 +34,8 @@ We don't own your data, and we don't have the right to access it on your behalf.
 # To Do:
 
 - [ ] Add precision indicator to information.
+- [ ] Improve triggering of facebook content script.
+- [ ] Improve UX. Make is easier to understand how it works.
 - [ ] Cache people that user asks to consider as Yale students.
 
 # License
