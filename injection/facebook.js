@@ -1,5 +1,4 @@
 // main.js -- Main injection script for facebook.
-// Recognizes profiles from Yalies and 
 
 if (!window.jQuery) {
     throw new Error("jQuery required for extension not found.");
@@ -23,8 +22,8 @@ function getLocalStorage() {
 }
 
 // Needs localStorage in order to work.
-var lstore = getLocalStorage();
-if (!lstore) {
+var lstorage = getLocalStorage();
+if (!lstorage) {
     throw new Error("Couldn't open/use localStorage.");
 }
 
@@ -170,7 +169,7 @@ function findByName(name, cb) {
             }
             cb(getMatches(result[key]));
         });
-    }
+    
 
     findByLName(function(found) {
         if (found) {
@@ -180,7 +179,8 @@ function findByName(name, cb) {
         return cb(false);
     });
 }
-        
+
+
 function getUIContainer() {
     var cntrs = document.querySelectorAll(".fbTimelineUnit");
     for (var i=0; i<cntrs.length; ++i) {
@@ -271,8 +271,8 @@ function handleProfile(name, container) {
         // "Lives in New Haven, Connecticut".
         var sbItems = container.querySelectorAll("[data-profile-intro-card]");
 
-        console.log("data:", lstore.getItem("ypaths"));
-        var ypaths = lstore.getItem("ypaths");
+        console.log("data:", lstorage.getItem("ypaths"));
+        var ypaths = lstorage.getItem("ypaths");
         if (ypaths) {
             if (JSON.parse(ypaths)[location.pathname]) {
                 return true;
@@ -305,14 +305,14 @@ function handleProfile(name, container) {
             showTryFind(function() {
                 findByName(name, function(students) {
                     if (students.length) {
-                        var yps = lstore.getItem("yps");
+                        var yps = lstorage.getItem("yps");
                         if (yps) {
                             yps = JSON.parse(yps);
                         } else {
                             yps = {};
                         }
                         yps[location.pathname] = students[0].names;
-                        lstore.setItem("ypaths", JSON.stringify(yps));
+                        lstorage.setItem("ypaths", JSON.stringify(yps));
                         addUserData(students[0]);
                     } else {
                         showNotFound();
@@ -390,13 +390,13 @@ function main() {
 $(main);
 
 $(window).on("statechange", function(){
-    console.log("STATE CHANGE.")
+    // console.log("STATE CHANGE.")
     setTimeout(main, 1500);
 });
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.urlChange) {
-        console.log("PUSH CHANGE.");
+        // console.log("PUSH CHANGE.");
         setTimeout(main, 1500);
     } else {
         throw new Error("Unrecognized message from background page.");
