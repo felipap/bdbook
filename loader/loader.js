@@ -1,11 +1,12 @@
 
 function downloadYFb() {
-    chrome.runtime.sendMessage({ downloadYFb: true }, function (response) {
+    chrome.runtime.sendMessage({ signalLoadTab: 1 }, function (response) {
+        location.href = 'https://students.yale.edu/facebook';
     });
 }
 
 function deleteData() {
-    chrome.runtime.sendMessage({ deleteData: true }, function (response) {
+    chrome.runtime.sendMessage({ deleteData: 1 }, function (response) {
         location.reload();
     });
 }

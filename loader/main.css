@@ -6,15 +6,6 @@
     margin-left: -480px;
 }
 
-.cas-wrapper {
-    
-}
-
-.cas-wrapper > iframe {
-    width: 700px;
-    height: 400px;
-}
-
 .warning {
     padding: 7px;
     background: #FFFF99;

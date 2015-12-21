@@ -24,7 +24,8 @@
 
 .bdb .status {
     margin: 10px 0;
-    font-size: 1.1em;
+    font-size: 15px;
+    line-height: 1.5em;
 }
 
 .bdb .status.success strong {

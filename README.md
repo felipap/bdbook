@@ -32,10 +32,11 @@ Let us know creating a ticket here.
 We don't own your data, and we don't have the right to access it on your behalf.
 
 # To Do:
-- [ ] Document this.
+- [ ] Add help button.
+- [ ] Document it.
 - [ ] Add precision indicator to information.
 - [ ] Improve UX. Make is easier to understand how it works.
-- [ ] Also show info on profile dialog.
+- [ ] Also show info on profile dialog, and search results.
 - [ ] Cache people that user asks to consider as Yale students.
 - [x] Improve triggering of facebook content script.
 

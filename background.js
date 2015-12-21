@@ -1,21 +1,7 @@
 // background.js -- Non-persistent background page for extension.
 
-// Adapted from https://mathiasbynens.be/notes/localstorage-pattern
-function getLocalStorage() {
-    var storage;
-    var fail;
-    var uid;
-    try {
-        uid = new Date;
-        (storage = window.localStorage).setItem(uid, uid);
-        fail = storage.getItem(uid) != uid;
-        storage.removeItem(uid);
-        fail && (storage = false);
-        return storage;
-    } catch (exception) {
-        return false;
-    }
-}
+// Refetch data when this changes.
+var DATA_VERSION = 0;
 
 var lstorage = getLocalStorage();
 if (!lstorage) {
@@ -23,8 +9,6 @@ if (!lstorage) {
 }
 
 var manifest = chrome.runtime.getManifest();
-
-//
 
 // TODO:
 // Will this always work, even though the background is not persistent?
@@ -37,19 +21,9 @@ var messageHandlers = {
             respond();
         });
     },
-    downloadYaleFacebook: function (request, sender, respond) {
-        var props = {
-            url: 'https://students.yale.edu/facebook',
-        };
-
-        chrome.tabs.create(props, function(tab) {
-            console.log("Tab:", tab, tab.id);
-            parsingTabs.push(tab.id);
-        });
-    },
-    getStatus: function (request, sender, respond) {
-        var is = lstorage.getItem("isSetup");
-        respond({ isSetup: is });
+    signalLoadTab: function (request, sender, respond) {
+        parsingTabs.push(sender.tab.id);
+        respond(true);
     },
     amIParseTab: function (request, sender, respond) {
         respond(parsingTabs.indexOf(sender.tab.id) != -1);
@@ -58,9 +32,22 @@ var messageHandlers = {
         lstorage.removeItem("isSetup");
         chrome.lstorage.local.clear(respond);
     },
-    updateSetup: function () {
+    getIsSetup: function (request, sender, respond) {
+        if (!lstorage.getItem("isSetup")) {
+            return respond(false);
+        }
+
+        var dv = parseInt(lstorage.getItem("dataVersion"));
+        if (isNaN(dv) || dv < DATA_VERSION) {
+            return respond(false);
+        }
+
+        respond(true);
+    },
+    signalSetup: function (req, sender, respond) {
         lstorage.setItem("isSetup", true);
-        respond();
+        lstorage.setItem("dataVersion", DATA_VERSION);
+        respond(true);
     },
     openLoader: function () {
         var props = {
@@ -73,12 +60,13 @@ var messageHandlers = {
 
 
 chrome.runtime.onMessage.addListener(function (req, sender, respond) {
-    console.log("Message from a content script:" + sender.tab.url);
+    console.log("Message from a content script:" + sender.tab.url +
+            JSON.stringify(req));
 
     for (var key in messageHandlers) {
         if (req[key]) {
             // Returning false makes sender not wait for response.
-            return handlers[key](req, sender, respond);
+            return messageHandlers[key](req, sender, respond);
         }
     }
 
