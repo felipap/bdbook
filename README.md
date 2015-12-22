@@ -34,6 +34,7 @@ We don't own your data, and we don't have the right to access it on your behalf.
 # To Do:
 - [ ] Add help button.
 - [ ] Document it.
+- [ ] Modify facebook search to search for people in specific colleges.
 - [ ] Add precision indicator to information.
 - [ ] Improve UX. Make is easier to understand how it works.
 - [ ] Also show info on profile dialog, and search results.
