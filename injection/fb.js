@@ -110,21 +110,24 @@ function handleProfile(name, container) {
     }
 
     function showTryFind(onclick) {
-        var li = makeYaleLine("<span>Try to find "+name+" in Yale Facebook.</span>",
+        var li = makeYaleLine("<span>Try to find "+name.split(" ")[0]+
+                " in Yale Facebook.</span>",
                 "bdfb_profile_li_tryfind");
         li.onclick = onclick;
         $(ul).prepend(li);
     }
 
-    function addUserData(data) {
+    function showResultsLine(data) {
         removePreviousLines();
 
-        var html = "<span class='bdfb_college'>"+data.college+"</span> ";
-        if (data.year) {
-            html += "<span class='bdfb_year'>"+data.year+"</span> ";
+        var person = data[0];
+
+        var html = "<span class='bdfb_college'>"+person.college+"</span> ";
+        if (person.year) {
+            html += "<span class='bdfb_year'>"+person.year+"</span> ";
         }
-        if (data.dorm) {
-            html += "<span class='bdfb_dorm'>("+data.dorm+")</span> ";
+        if (person.dorm) {
+            html += "<span class='bdfb_dorm'>("+person.dorm+")</span> ";
         }
 
         var li = makeYaleLine(html);
@@ -175,14 +178,14 @@ function handleProfile(name, container) {
         if (isFromYale()) {
             findByName(name, function(students) {
                 if (students.length) {
-                    addUserData(students[0]);
+                    showResultsLine(students);
                 } else {
                     showNotFound();
                     console.log("Student not found.");
                 }
             });
         } else {
-            // console.log("Not a Yale student.");
+            // Show "Try to find this person." button.
             showTryFind(function() {
                 findByName(name, function(students) {
                     if (students.length) {
@@ -194,7 +197,7 @@ function handleProfile(name, container) {
                         }
                         yps[location.pathname] = students[0].names;
                         lstorage.setItem("ypaths", JSON.stringify(yps));
-                        addUserData(students[0]);
+                        showResultsLine(students);
                     } else {
                         showNotFound();
                         console.log("Student not found.");

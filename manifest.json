@@ -21,7 +21,8 @@
             "js": [
                 "lib.js",
                 "injection/jquery-2.1.4.min.js",
-                "injection/facebook.js"
+                "injection/fb.js",
+                "nicknames.js"
             ]
         },
         {
