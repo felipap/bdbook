@@ -3,7 +3,7 @@
 
     "name": "Bulldog Book",
     "description": "Adds information about Yale students on your facebook.",
-    "version": "0.1.4",
+    "version": "0.1.5",
     
     "background": {
         "persistent": false,

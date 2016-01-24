@@ -45,11 +45,12 @@ var LoaderTabTracker = function() {
 }();
 
 var messageHandlers = {
-  deleteDate: function (request, sender, respond) {
+  deleteData: function (request, sender, respond) {
     lstorage.removeItem("isSetup");
     chrome.storage.local.clear(function () {
       respond();
     });
+    return true;
   },
   signalLoadTab: function (request, sender, respond) {
     LoaderTabTracker.add(sender.tab.id);
@@ -57,10 +58,6 @@ var messageHandlers = {
   },
   amIParseTab: function (request, sender, respond) {
     respond(LoaderTabTracker.check(sender.tab.id));
-  },
-  deleteData: function (request, sender, respond) {
-    lstorage.removeItem("isSetup");
-    chrome.lstorage.local.clear(respond);
   },
   getIsSetup: function (request, sender, respond) {
     if (!lstorage.getItem("isSetup")) {

@@ -19,6 +19,12 @@ button.doit {
     color: #0bf;
 }
 
+.setup-status {
+  color: #2A5;
+  font-weight: bold;
+  font-size: 14px;
+}
+
 .status-wrapper {
     padding: 7px;
     background: #EEE;
@@ -44,7 +50,6 @@ p {
 }
 
 section.notice p {
-  font-size: 12px;
 }
 
 .status-wrapper p {
@@ -58,6 +63,9 @@ hr {
   height: 1px;
 }
 
+body:not(.setup) .ifsetup {
+  display: none !important;
+}
 
 footer {
   margin-top: 20px;

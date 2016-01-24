@@ -173,7 +173,8 @@ function handleProfile(name, container) {
       html += "<span class='bdfb_dorm'>("+person.dorm+")</span> ";
     }
     if (person.suitemates) {
-      var onclick = 'alert("In '+person.names[0]+'&rsquo;s suite: \\n &bull; '+
+      var date = new Date(person.suitemates.t).toLocaleDateString('en');
+      var onclick = 'alert("In '+person.names[0]+'&rsquo;s suite as of '+date+': \\n &bull; '+
         person.suitemates.names.join("\\n &bull; ")+'")';
       html += "<a href='#' onClick='"+onclick+"'>(see suite)</a> ";
     }

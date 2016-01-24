@@ -9,12 +9,22 @@
     <div class="container">
         <h1>Bulldog Book</h1>
         <h3>See yalies' info on their Facebook pages.</h3>
+        
+        <div class="setup-status ifsetup">
+          <label>Status:</label> All is setup. You're good to go.
+        </div>
+
+        <hr />
+
+        <section class="setup" id="setup">
+
+        <h2>Setup</h2>
         <p>
             To use <strong>Bulldog Book</strong>, we need to download student names
             to your browser.
             <br />
             To do that, we will <strong>open Yale Facebook</strong> and
-            <strong>guide you through the process</strong>. <strong>Read the notice and then click the button below
+            <strong>guide you through the process</strong>. <strong>Read the notice below and then click the button below
               to start...</strong>
         </p>
 
@@ -35,11 +45,15 @@
             Go To <strong>Yale Face Book</strong>!
         </button>
 
-        or
+        <div class="ifsetup" style="display: inline;">
 
-        <button class="js-deleteData">
-            Clear Data
-        </button>
+          or
+
+          <button class="js-deleteData">
+              Clear Data
+          </button>
+        </div>
+        </section>
 
         <section class="picture">
         <p>What it looks like:</p>
@@ -49,7 +63,7 @@
         <hr />
 
         <section class="notice">
-          <h3>Notice</h3>
+          <h2>Notice</h2>
           <p>
           <strong>You will need to have access to Yale Face Book in order to
             properly install this extension</strong>.

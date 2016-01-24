@@ -7,27 +7,22 @@ function downloadYFb() {
 
 function deleteData() {
   chrome.runtime.sendMessage({ deleteData: 1 }, function (response) {
+    alert("All data cleared from your computer.");
     location.reload();
   });
 }
 
-function getStudentCount(cb) {
-  var count = 0;
-  chrome.storage.local.get(null, function(all) {
-    for (var lname in all) {
-      count += all[lname].length;
-    }
-    cb(count);
-  });
+function getIsSetup(cb) {
+  chrome.runtime.sendMessage({ getIsSetup: 1 }, cb);
 }
 
 $(function() {
   document.querySelector(".js-downloadYFb").onclick = downloadYFb;
   document.querySelector(".js-deleteData").onclick = deleteData;
-  if (document.querySelector(".status-count")) {
-    getStudentCount(function (count) {
-      document.querySelector(".status-count").innerHTML = count;
-    });
-  }
+  getIsSetup(function(setup) {
+    if (setup) {
+      document.body.className += " setup";
+    }
+  });
 });
 
