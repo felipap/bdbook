@@ -20,8 +20,6 @@ function findByName(name, cb) {
   }
  
   function getMatchScore(student) {
-    console.log("trying student", student.names.join(" "));
-
     var score = 0;
     if (isSameName(student.names[0], fname)) {
       score += 2;
@@ -148,7 +146,7 @@ function handleProfile(name, container) {
     var li = makeYaleLine("Click here to start seeting yalies' info.</span>",
       "bdfb_profile_li_tryfind");
       li.onclick = function() {
-        chrome.runtime.sendMessage({ openLoader: true }, function (response) {
+        chrome.runtime.sendMessage({ openHelper: true }, function (response) {
         });
       };
       $(ul).prepend(li);
@@ -174,7 +172,6 @@ function handleProfile(name, container) {
     if (person.dorm) {
       html += "<span class='bdfb_dorm'>("+person.dorm+")</span> ";
     }
-
     if (person.suitemates) {
       var onclick = 'alert("In '+person.names[0]+'&rsquo;s suite: \\n &bull; '+
         person.suitemates.names.join("\\n &bull; ")+'")';
@@ -182,12 +179,12 @@ function handleProfile(name, container) {
     }
 
 
-    html += "<a href='#' class='bdfb_help'>More</a>";
+    html += "<a href='#' class='bdfb_help'>MORE</a>";
 
     var li = makeYaleLine(html);
 
     li.querySelector(".bdfb_help").onclick = function() {
-        chrome.runtime.sendMessage({ openHelp: true }, function (response) {
+        chrome.runtime.sendMessage({ openHelper: true }, function (response) {
         });
     };
     li.setAttribute("title", "Information from Yale Facebook.");

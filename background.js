@@ -80,7 +80,7 @@ var messageHandlers = {
     lstorage.setItem("dataVersion", DATA_VERSION);
     respond(true);
   },
-  openLoader: function () {
+  openHelper: function () {
     var props = {
       url: 'loader/index.html',
     };
