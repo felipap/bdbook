@@ -29,7 +29,36 @@ button.doit {
     -webkit-margin-end: 0px;
 }
 
+p {
+  font-size: 13px;
+}
+
+section.notice p {
+  font-size: 12px;
+}
+
 .status-wrapper p {
     margin: 0;
 }
 
+hr {
+  border: 0;
+  border-top: 1px solid #EEE;
+  margin: 20px 0 ;
+  height: 1px;
+}
+
+
+footer {
+  margin-top: 20px;
+  color: #222;
+}
+
+a {
+  color: #111;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}

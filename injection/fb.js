@@ -15,58 +15,77 @@ function findByName(name, cb) {
     fname = names[0],
     lname = names[names.length-1];
 
-  function getMatchScore(user) {
-    if (normName(user.names[user.names.length-1]) != normName(lname)) {
-      return 0;
+  function isSameName(a, b) {
+    return normName(a) === normName(b);
+  }
+ 
+  function getMatchScore(student) {
+    console.log("trying student", student.names.join(" "));
+
+    var score = 0;
+    if (isSameName(student.names[0], fname)) {
+      score += 2;
+    } else {
+      // If not first name, fname must be a nickname.
+      if (normName(fname) in nicknames && isSameName(nicknames[normName(fname)], student.names[0])) {
+        // Yes it is.
+        score += 1;
+      } else {
+        throw new Error("Unexpected student "+JSON.stringify(student)+" matched for "+names+".");
+      }
     }
-    if (normName(user.names[0]) == normName(fname)) {
-      return 2;
+
+    var lastName = student.names[student.names.length-1];
+    if (!isSameName(lastName, lname)) {
+      score = 0;
     }
-    return 0;
+
+    return score;
   }
 
   function onGetFound(people) {
     if (people.length === 0) {
       return cb(false);
     }
-    
-    var matches = [];
-    // TODO: sort by match score
-    people.forEach(function (user) {
-      if (getMatchScore(user) > 0) {
-        matches.push(user);
-      }
-    });
 
-    cb(matches);
+    var matches = [];
+    (function processStudent(students) {
+      if (students.length === 0) {
+        return cb(matches);
+      }
+      
+      var student = students.pop();
+      if (getMatchScore(student) > 0) {
+        console.log(student)
+
+        if (!student.hsid) {
+          matches.push(student);
+          processStudent(students);
+          return;
+        }
+
+        chrome.storage.local.get("suite:"+student.hsid, function(r) {
+          student.suitemates = r["suite:"+student.hsid];
+          matches.push(student);
+          processStudent(students);
+        });
+      } else {
+        processStudent(students);
+      }
+    })(people);
   }
 
-  var key = normName(fname);
-  chrome.storage.local.get(key, function (found) {
-    var matches = [];
-    for (var k in found[key]) {
-      matches.push(found[key][k]);
-    }
-
-    onGetFound(matches);
-
-    return;
-
-    // Nicknames are lousy. Let's leave them for later.
-
+  var key = "name:"+normName(fname);
+  chrome.storage.local.get(key, function (result) {
     // If first name has a nickname associated to it, look in storage
     // for people with first name equal to the one associated with the nickname.
     if (normName(fname) in nicknames) {
-      var original = normName(nicknames[normName(fname)]);
-      chrome.storage.local.get(original, function (f2) {
-        console.log("found:", f2)
-        for (var k in f2) {
-          matches.push(f2[k]);
-        }
-        onGetFound(matches);
+      var key2 = "name:"+normName(nicknames[normName(fname)]);
+      chrome.storage.local.get(key2, function (f2) {
+        onGetFound(result[key].concat(f2[key2]));
       });
     } else {
-      onGetFound(matches);
+      onGetFound(result[key]);
     }
   });
 }
@@ -127,20 +146,20 @@ function handleProfile(name, container) {
 
   function showSetupBDBook() {
     var li = makeYaleLine("Click here to start seeting yalies' info.</span>",
-                          "bdfb_profile_li_tryfind");
-                          li.onclick = function() {
-                            chrome.runtime.sendMessage({ openLoader: true }, function (response) {
-                            });
-                          };
-                          $(ul).prepend(li);
+      "bdfb_profile_li_tryfind");
+      li.onclick = function() {
+        chrome.runtime.sendMessage({ openLoader: true }, function (response) {
+        });
+      };
+      $(ul).prepend(li);
   }
 
   function showTryFind(onclick) {
     var li = makeYaleLine("<span>Try to find "+name.split(" ")[0]+
-                          " in Yale Facebook.</span>",
-                          "bdfb_profile_li_tryfind");
-                          li.onclick = onclick;
-                          $(ul).prepend(li);
+      " in Yale Facebook.</span>",
+      "bdfb_profile_li_tryfind");
+      li.onclick = onclick;
+      $(ul).prepend(li);
   }
 
   function showResultsLine(data) {
@@ -156,7 +175,21 @@ function handleProfile(name, container) {
       html += "<span class='bdfb_dorm'>("+person.dorm+")</span> ";
     }
 
+    if (person.suitemates) {
+      var onclick = 'alert("In '+person.names[0]+'&rsquo;s suite: \\n &bull; '+
+        person.suitemates.names.join("\\n &bull; ")+'")';
+      html += "<a href='#' onClick='"+onclick+"'>(see suite)</a> ";
+    }
+
+
+    html += "<a href='#' class='bdfb_help'>More</a>";
+
     var li = makeYaleLine(html);
+
+    li.querySelector(".bdfb_help").onclick = function() {
+        chrome.runtime.sendMessage({ openHelp: true }, function (response) {
+        });
+    };
     li.setAttribute("title", "Information from Yale Facebook.");
     $(ul).prepend(li);
   }

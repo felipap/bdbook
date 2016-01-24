@@ -48,15 +48,17 @@ function parsePage() {
     if (isDorm(lines[0])) {
       //data.dorm = lines[0];
       if (isSuiteGroup(lines[1])) {
-        // Don't store suite groups.
         // data.sid = lines[1];
+        // Hash suite group id to protect students.
+        data.hsid = hash(lines[1]);
         addrStart = 2;
       } else {
         addrStart = 1;
       }
     } else {
       if (isSuiteGroup(lines[0])) {
-        data.sid = lines[0];
+        // data.sid = lines[0];
+        data.hsid = hash(lines[0]);
         addrStart = 1;
       } else {
         addrStart = 0;
@@ -100,22 +102,30 @@ function parsePage() {
 
 function storeStudents(stds) {
   // Students are organized by last name, in an associative table.
-
   // The key is the normalized version of the student's first name.
 
-  var named = {};
+  var data = {};
   for (var i=0; i<stds.length; ++i) {
     var dude = stds[i];
-    var key = normName(dude.names[0]);
-    if (named[key]) {
-      named[key].push(dude);
+    var nkey = "name:"+normName(dude.names[0]);
+    if (data[nkey]) {
+      data[nkey].push(dude);
     } else {
-      named[key] = [dude];
+      data[nkey] = [dude];
+    }
+
+		if (dude.hsid) {
+      var skey = "suite:"+dude.hsid;
+      if (data[skey]) {
+        data[skey].names.push(dude.names.join(" "));
+      } else {
+        data[skey] = { t: Date.now(), names: [dude.names.join(" ")] };
+      }
     }
   }
 
   chrome.storage.local.clear(function() {
-    chrome.storage.local.set(named, function() {
+    chrome.storage.local.set(data, function() {
       chrome.storage.local.get(null, function (items) {
         console.log("just saved:", items);
       })
@@ -127,8 +137,8 @@ function InfoBox() {
   var html = [
     "<div class='bdb_blackout'></div>",
     "<div class='bdb bdb_box_wrapper'>",
-    "<h1>Bulldog Book Loader</h1>",
-    "<p>Let's download the students data to use.</p>",
+    "<h1>Bulldog Book loader</h1>",
+    "<p>This is a required step to make the extension work.</p>",
     "<div class='status'>",
     "PLEASE WAIT! This page is loading.",
     "</div>",

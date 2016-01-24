@@ -5,7 +5,7 @@
 }
 
 .timelineReportContainer .bdfb_profile_li {
-    padding: 4px 16px 4px 0;
+    padding: 4px 4px 4px 0;
 }
 
 .bdfb_profile_li > .bdfb_y {
@@ -24,4 +24,21 @@
 
 .bdfb_profile_li_tryfind:hover {
     text-decoration: underline;
+}
+
+[data-__bdbook="true"] .timelineReportContainer a[aria-label="Edit"][data-hover="tooltip"] {
+  margin-top: 23px;
+}
+
+.bdfb_profile_li > .bdfb_help {
+  float: right;
+  display: inline-block;
+  font-size: 9px;
+  line-height: 18px;
+  color: #444;
+  opacity: .3;
+}
+
+.bdfb_profile_li:hover > .bdfb_help {
+  opacity: 1;
 }

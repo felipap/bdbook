@@ -68,6 +68,7 @@ var messageHandlers = {
     }
 
     var dv = parseInt(lstorage.getItem("dataVersion"));
+
     if (isNaN(dv) || dv < DATA_VERSION) {
       return respond(false);
     }
