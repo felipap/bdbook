@@ -2,6 +2,7 @@
     "manifest_version": 2,
 
     "name": "Bulldog Book",
+    "short_name": "BDBook",
     "description": "Adds information about Yale students on your facebook.",
     "version": "0.1.5",
     
