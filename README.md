@@ -5,7 +5,7 @@ Access on [Chrome Webstore](https://chrome.google.com/webstore/detail/bulldog-fa
 
 What it looks like:
 
-![](http://i.imgur.com/lbSvhE0.png)
+<img src="http://i.imgur.com/lbSvhE0.png" alt="" height="300" />
 
 **Bookdog Book** is a Chrome extension that adds to Facebook profiles of
 current Yale undergrads information about their residential colleges, class
