@@ -1,32 +1,41 @@
-<!DOCTYPE html>
-<html lang="en-us">
+<!doctype html>
+<html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Bulldog Book by f03lipe</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-light.css">
+    <meta name="viewport" content="width=device-width">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">Bulldog Book</h1>
-      <h2 class="project-tagline">Bulldog Book is a Chrome extension that adds information about current Yale students to their Facebook profiles.</h2>
-      <a href="https://github.com/f03lipe/bdbook" class="btn">View on GitHub</a>
-      <a href="https://github.com/f03lipe/bdbook/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/f03lipe/bdbook/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+    <div class="wrapper">
+      <header>
+        <h1>Bulldog Book</h1>
+        <p>Bulldog Book is a Chrome extension that adds information about current Yale students to their Facebook profiles.</p>
 
-    <section class="main-content">
-      <h1>
-<a id="bulldog-book" class="anchor" href="#bulldog-book" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bulldog Book</h1>
+        <p class="view"><a href="https://github.com/f03lipe/bdbook">View the Project on GitHub <small>f03lipe/bdbook</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/f03lipe/bdbook/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/f03lipe/bdbook/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/f03lipe/bdbook">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a id="bulldog-book" class="anchor" href="#bulldog-book" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Bulldog Book</h1>
 
 <p>Access on <a href="https://chrome.google.com/webstore/detail/bulldog-facebook/jnfmcjindkjnjmapjemigfinkhgieoik">Chrome Webstore</a>.</p>
 
 <p>What it looks like:</p>
 
-<p><img src="http://i.imgur.com/6FxDRNS.png" alt=""></p>
+<p><img src="http://i.imgur.com/lbSvhE0.png" alt=""></p>
 
 <p><strong>Bookdog Book</strong> is a Chrome extension that adds to Facebook profiles of
 current Yale undergrads information about their residential colleges, class
@@ -39,47 +48,47 @@ University use and for individual communication of a business or incidental
 personal nature between individuals who are included in the facebook/directory".</p>
 
 <h3>
-<a id="q-its-not-working-on-some-profiles" class="anchor" href="#q-its-not-working-on-some-profiles" aria-hidden="true"><span class="octicon octicon-link"></span></a>Q: It's not working on some profiles.</h3>
+<a id="q-its-not-working-on-some-profiles" class="anchor" href="#q-its-not-working-on-some-profiles" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Q: It's not working on some profiles.</h3>
 
 <p>Bulldog Book works by looking up the name on a profile page names of students.
 If a student's first and last name don't match up accross Yale Directory and
 Facebook, we probably won't be able to find the person.</p>
 
 <h3>
-<a id="q-its-not-working-on-any-profile" class="anchor" href="#q-its-not-working-on-any-profile" aria-hidden="true"><span class="octicon octicon-link"></span></a>Q: It's not working on ANY profile.</h3>
+<a id="q-its-not-working-on-any-profile" class="anchor" href="#q-its-not-working-on-any-profile" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Q: It's not working on ANY profile.</h3>
 
 <p>Let us know creating a ticket here.</p>
 
 <h3>
-<a id="q-why-do-i-have-to-download-the-yale-facebook-data-to-my-computer" class="anchor" href="#q-why-do-i-have-to-download-the-yale-facebook-data-to-my-computer" aria-hidden="true"><span class="octicon octicon-link"></span></a>Q: Why do I have to download the Yale Facebook data to my computer?</h3>
+<a id="q-why-do-i-have-to-download-the-yale-facebook-data-to-my-computer" class="anchor" href="#q-why-do-i-have-to-download-the-yale-facebook-data-to-my-computer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Q: Why do I have to download the Yale Facebook data to my computer?</h3>
 
 <p>We don't own your data, and we don't have the right to access it on your behalf.</p>
 
 <h1>
-<a id="to-do" class="anchor" href="#to-do" aria-hidden="true"><span class="octicon octicon-link"></span></a>To Do:</h1>
+<a id="to-do" class="anchor" href="#to-do" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>To Do:</h1>
 
 <ul>
-<li>[ ] Document this.</li>
+<li>[ ] Add help button.</li>
+<li>[ ] Document it.</li>
+<li>[ ] Modify facebook search to search for people in specific colleges.</li>
 <li>[ ] Add precision indicator to information.</li>
 <li>[ ] Improve UX. Make is easier to understand how it works.</li>
-<li>[ ] Also show info on profile dialog.</li>
+<li>[ ] Also show info on profile dialog, and search results.</li>
 <li>[ ] Cache people that user asks to consider as Yale students.</li>
 <li>[x] Improve triggering of facebook content script.</li>
 </ul>
 
 <h1>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
 
 <p>MIT.</p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/f03lipe/bdbook">Bulldog Book</a> is maintained by <a href="https://github.com/f03lipe">f03lipe</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/f03lipe">f03lipe</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
-
-    </section>
-
-  
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
   </body>
 </html>
