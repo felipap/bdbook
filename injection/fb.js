@@ -42,7 +42,7 @@ function findByName(name, cb) {
   }
 
   function onGetFound(people) {
-    if (people.length === 0) {
+    if (people === undefined || people.length === 0) {
       return cb(false);
     }
 
@@ -180,7 +180,7 @@ function handleProfile(name, container) {
     }
 
 
-    html += "<a href='#' class='bdfb_help'>MORE</a>";
+    html += "<a href='#' class='bdfb_help'>ABOUT</a>";
 
     var li = makeYaleLine(html);
 

@@ -6,6 +6,12 @@
     margin-left: -480px;
 }
 
+span.warning {
+  display: inline-block;
+  padding: 2px 0px;
+  margin: 2px 0;
+}
+
 .warning {
     padding: 7px;
     background: #FFFF99;
@@ -17,6 +23,25 @@ button {
 
 button.doit {
     color: #0bf;
+    background: white;
+    outline: none;
+    border-radius: 4px;
+    font-size: 16px;
+    border: 1px solid #DDD;
+    box-shadow: 0 1px 1px rgba(0,0,0,.2);
+}
+
+button.doit:hover {
+  scolor: white;
+  sbackground: #08C;
+  sbox-shadow: none;
+  box-shadow: 0 1px 1px rgba(0,0,0,.4);
+}
+
+button.doit:active {
+  margin-bottom: -1px;
+  margin-top: 1px;
+  box-shadow: none;
 }
 
 .setup-status {
@@ -73,7 +98,7 @@ footer {
   margin-bottom: 20px;
 }
 
-a {
+footer a {
   color: #111;
   text-decoration: none;
 }

@@ -1,7 +1,7 @@
 // background.js -- Non-persistent background page for extension.
 
 // Refetch data when this changes.
-var DATA_VERSION = 1;
+var DATA_VERSION = 2;
 
 var lstorage = getLocalStorage();
 if (!lstorage) {
