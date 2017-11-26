@@ -3,8 +3,8 @@
 
     "name": "Bulldog Book",
     "short_name": "BDBook",
-    "description": "Adds information about Yale students on your facebook.",
-    "version": "0.1.5",
+    "description": "See residential college information on the Facebook profile of Yale students.",
+    "version": "0.1.6",
     
     "background": {
         "persistent": false,

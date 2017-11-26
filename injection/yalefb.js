@@ -46,11 +46,12 @@ function parsePage() {
 
     var addrStart;
     if (isDorm(lines[0])) {
-      //data.dorm = lines[0];
+      // data.hsid = hash(lines[1].slice(0, lines[1].length-1));
+      // data.dorm = lines[0];
       if (isSuiteGroup(lines[1])) {
         // data.sid = lines[1];
-        // Hash suite group id to protect students.
         data.hsid = hash(lines[1]);
+        // Hash suite group id to protect students.
         addrStart = 2;
       } else {
         addrStart = 1;

@@ -25,11 +25,13 @@ function findByName(name, cb) {
       score += 2;
     } else {
       // If not first name, fname must be a nickname.
-      if (normName(fname) in nicknames && isSameName(nicknames[normName(fname)], student.names[0])) {
+      if (normName(fname) in nicknames &&
+          isSameName(nicknames[normName(fname)], student.names[0])) {
         // Yes it is.
         score += 1;
       } else {
-        throw new Error("Unexpected student "+JSON.stringify(student)+" matched for "+names+".");
+        throw new Error("Unexpected student "+JSON.stringify(student)+
+                        " matched for "+names+".");
       }
     }
 
@@ -54,8 +56,6 @@ function findByName(name, cb) {
       
       var student = students.pop();
       if (getMatchScore(student) > 0) {
-        console.log(student)
-
         if (!student.hsid) {
           matches.push(student);
           processStudent(students);
@@ -135,8 +135,8 @@ function handleProfile(name, container) {
     return li;
   }
 
-  function showNotFound() {
-    var li = makeYaleLine("Person not found in Yale Directory.");
+  function showError(msg) {
+    var li = makeYaleLine(msg);
     removePreviousLines();
     console.log("li", li);
     $(ul).prepend(li);
@@ -160,10 +160,15 @@ function handleProfile(name, container) {
       $(ul).prepend(li);
   }
 
-  function showResultsLine(data) {
+  function showResultsLine(results) {
     removePreviousLines();
 
-    var person = data[0];
+    if (results.length > 1) {
+      showError("Multiple students found with this name.");
+      return;
+    }
+
+    var person = results[0];
 
     var html = "<span class='bdfb_college'>"+person.college+"</span> ";
     if (person.year) {
@@ -174,11 +179,15 @@ function handleProfile(name, container) {
     }
     if (person.suitemates) {
       var date = new Date(person.suitemates.t).toLocaleDateString('en');
-      var onclick = 'alert("In '+person.names[0]+'&rsquo;s suite as of '+date+': \\n &bull; '+
-        person.suitemates.names.join("\\n &bull; ")+'")';
+      var onclick = 'alert("Students found in '+
+        person.names[0]+
+        '&rsquo;s suite as of '+
+        date+
+        ': \\n &bull; '+
+        person.suitemates.names.join("\\n &bull; ")+
+        '\\n")';
       html += "<a href='#' onClick='"+onclick+"'>(see suite)</a> ";
     }
-
 
     html += "<a href='#' class='bdfb_help'>ABOUT</a>";
 
@@ -216,6 +225,9 @@ function handleProfile(name, container) {
       if (text.match(/Studie[sd](?: [\w ]+)? at Yale University/)) {
         return true;
       }
+      if (text.match(/Goes to Yale University/)) {
+        return true;
+      }
       if (text.match(/(?:Also lives)|(?:Lives) in New Haven, Connecticut/)) {
         return true;
       }
@@ -237,7 +249,7 @@ function handleProfile(name, container) {
         if (students.length) {
           showResultsLine(students);
         } else {
-          showNotFound();
+          showError("Person not found in Yale directory.");
           console.log("Student not found.");
         }
       });
@@ -256,7 +268,7 @@ function handleProfile(name, container) {
             lstorage.setItem("ypaths", JSON.stringify(yps));
             showResultsLine(students);
           } else {
-            showNotFound();
+            showError("Person not found in Yale directory.");
             console.log("Student not found.");
           }
         });
